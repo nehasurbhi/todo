@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do list</title>
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+input[type="text"] {
+   /* width: 80%; */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li .delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+li .delete:hover {
+    background-color: #c82333;
+}
+
+/* Styles for the edit input field */
+li .edit-input {
+    width: 70%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+</style>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <button id="addBtn">Add Task</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+// Get the required elements from the DOM
+const taskInput = document.getElementById('taskInput');
+const addBtn = document.getElementById('addBtn');
+const taskList = document.getElementById('taskList');
+
+// Function to add a new task
+function addTask() {
+    const taskText = taskInput.value.trim();
+
+    if (taskText !== '') {
+        // Create a new list item (li) element
+        const li = document.createElement('li');
+
+        // Create a span to hold the task text
+        const span = document.createElement('span');
+        span.textContent = taskText;
+
+        // Create an edit button for each task
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Edit';
+        editBtn.classList.add('edit');
+
+        // Add edit functionality to the button
+        editBtn.addEventListener('click', function () {
+            editTask(span, li, editBtn);
+        });
+
+        // Create a delete button for each task
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.classList.add('delete');
+
+        // Add delete functionality to the button
+        deleteBtn.addEventListener('click', function () {
+            taskList.removeChild(li);
+        });
+
+        // Append the span, edit, and delete buttons to the list item
+        li.appendChild(span);
+        li.appendChild(editBtn);
+        li.appendChild(deleteBtn);
+
+        // Add the new list item to the task list
+        taskList.appendChild(li);
+
+        // Clear the input field
+        taskInput.value = '';
+    }
+}
+
+// Function to edit a task
+function editTask(span, li, editBtn) {
+    // Replace the task text with an input field for editing
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = span.textContent;
+    input.classList.add('edit-input');
+
+    // Replace the edit button with a save button
+    editBtn.textContent = 'Save';
+
+    // Add save functionality to the save button
+    editBtn.addEventListener('click', function () {
+        span.textContent = input.value;
+        li.replaceChild(span, input);
+        editBtn.textContent = 'Edit';
+    });
+
+    // Replace the span with the input field
+    li.replaceChild(input, span);
+
+    // Automatically focus on the input field
+    input.focus();
+
+    // Allow pressing Enter to save the task
+    input.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            span.textContent = input.value;
+            li.replaceChild(span, input);
+            editBtn.textContent = 'Edit';
+        }
+    });
+}
+
+// Event listener for the 'Add Task' button
+addBtn.addEventListener('click', addTask);
+
+// Allow pressing Enter to add a task
+taskInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        addTask();
+    }
+});
+
+    </script>
+</body>
+</html>
